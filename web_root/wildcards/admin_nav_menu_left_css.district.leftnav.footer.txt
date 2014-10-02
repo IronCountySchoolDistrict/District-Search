@@ -1,0 +1,9 @@
+<!-- Start Sams custom content -->
+<script type="text/template" id="dist-stu-template">
+    <!-- Start Sams custom content -->
+    <li><a href="/admin/district-search.html">District Students Search</a></li>
+    <!-- End Sams custom content -->
+</script>
+
+<script src="/scripts/DistrictSearch/admin-nav-district-search.js"></script>
+<!-- End Sams custom content -->

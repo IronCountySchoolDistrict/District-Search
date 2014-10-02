@@ -1,0 +1,7 @@
+<script type="text/template" id="dist-search-template">
+    <li>
+        <a href="/admin/district-search.html">District Search</a>
+    </li>
+</script>
+
+<script src="/scripts/DistrictSearch/district-search.js"></script>

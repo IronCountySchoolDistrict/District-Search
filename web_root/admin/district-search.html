@@ -1,0 +1,45 @@
+~[frame_type:none]
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Created by Jason Springel - v1.0 04/07/2013 -->
+    <title>District-Wide Student Search</title>
+    ~[wc:commonscripts]
+    <link href="/images/css/screen.css" rel="stylesheet" media="screen">
+    <link href="/images/css/print.css" rel="stylesheet" media="print">
+</head>
+
+<body>
+~[wc:admin_header_css]<!-- breadcrumb tag starts in header_css -->
+~[wc:admin_navigation_css]
+
+<!-- start of search menu -->
+<h1>District-Wide Student Search</h1>
+
+<div class="box-round" style="width:500px;">
+    <form action="district-search2.html" method="POST" id="ssForm">
+        <h2>~[text:psx.html.admin.home.search]</h2>
+        <ul class="tabs">
+            <li><a href="/admin/home.html">~[text:psx.html.admin.home.students]</a></li>
+            <li><a href="/admin/faculty/search.html">~[text:psx.html.admin.home.staff]</a></li>
+            <li><a href="/admin/guardians/search.html">~[text:psx.html.admin.home.parents]</a></li>
+            <li class="selected"><a href="/admin/district-search.html">District Search</a></li>
+        </ul>
+        <br>
+
+        <p class="bold">
+            Last Name contains:&nbsp;&nbsp;<input type="text" name="student" value="" size="15"/><br><br>
+            or Date of Birth:&nbsp;&nbsp;<input type="text" class="psDateWidget" name="dob" value="" size="10">
+        </p>
+        <br>
+
+        <div class="button-row">
+            <button type="submit" id="btnSearch"><em>Search</em></button>
+        </div>
+
+    </form>
+</div>
+~[wc:admin_footer_css]
+
+</body>
+</html>
