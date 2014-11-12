@@ -3,6 +3,10 @@
 <html>
 <head>
     <!-- Created by Jason Springel - v1.0 04/07/2013 -->
+    <!--  v1.5 06/22/2013 Add color coding to enroll status -->
+    <!--  v1.6 02/25/2014 Use page fragment so home.html does not have to be customized -->
+    <!--  v1.7 08/04/2014 UI Tweaks. Released as plugin for 7.8+ -->
+
     <title>District-Wide Student Search</title>
     ~[wc:commonscripts]
     <link href="/images/css/screen.css" rel="stylesheet" media="screen">
@@ -18,25 +22,26 @@
 
 <div class="box-round" style="width:500px;">
     <form action="district-search2.html" method="POST" id="ssForm">
-        <h2>~[text:psx.html.admin.home.search]</h2>
         <ul class="tabs">
             <li><a href="/admin/home.html">~[text:psx.html.admin.home.students]</a></li>
             <li><a href="/admin/faculty/search.html">~[text:psx.html.admin.home.staff]</a></li>
             <li><a href="/admin/guardians/search.html">~[text:psx.html.admin.home.parents]</a></li>
             <li class="selected"><a href="/admin/district-search.html">District Search</a></li>
         </ul>
-        <br>
-
-        <p class="bold">
-            Last Name contains:&nbsp;&nbsp;<input type="text" name="student" value="" size="15"/><br><br>
-            or Date of Birth:&nbsp;&nbsp;<input type="text" class="psDateWidget" name="dob" value="" size="10">
-        </p>
-        <br>
-
-        <div class="button-row">
-            <button type="submit" id="btnSearch"><em>Search</em></button>
-        </div>
-
+        <fieldset id="districtSearch">
+            <div>
+                <label>Last Name contains:</label>
+                <input type="text" name="student" value="" id="searchParameters.lastName"/>
+            </div>
+            <div>
+                <label>or Date of Birth:</label>
+                <input type="text" class="psDateWidget" name="dob" value="" id="searchParameters.dob"/>
+            </div>
+            <div>
+                <label>Search</label>
+                <button type="submit" id="btnSearch" class="search"><em>&nbsp;</em></button>
+            </div>
+        </fieldset>
     </form>
 </div>
 ~[wc:admin_footer_css]
