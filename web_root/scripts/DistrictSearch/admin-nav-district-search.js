@@ -1,9 +1,7 @@
-/*global $j*/
-// Insert District Students Search template into leftnav People link list
-(function () {
+/*global require*/
+
+require(['jquery'], function ($) {
     'use strict';
-    // Insert District Students Search template.
-    var distSrchTemplate = $j($j('#dist-stu-template').html());
-    var select = $j('#navParentSearch').parent();
-    distSrchTemplate.insertAfter(select);
-}());
+    // Insert District Students Search template into leftnav People link list
+    $("#navParentSearch").parent().after('<li><a href="/admin/district-search.html">District Search</a></li>');
+});

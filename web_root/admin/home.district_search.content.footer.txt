@@ -1,0 +1,7 @@
+
+<!-- District-Wide Student Search Created by Jason Springel - v1.0 04/07/2013 -->
+<!--  v1.5 06/22/2013 Add color coding to enroll status -->
+<!--  v1.6+ 02/25/2014 Use page fragment so home.html does not have to be customized -->
+<script>
+$j(".tabs li:last").after('<li><a href="/admin/district-search.html">District Search</a></li>');
+</script>

@@ -40,36 +40,60 @@
             ~[tlist_sql;
                 SELECT
                     s.student_number,
-                    replace(s.lastfirst, '''', '&apos'||chr(59)),
-                    TO_CHAR(s.dob,'MM/DD/YYYY'),
+                    s.lastfirst,
+                    s.ssn,
+                    s.dob,
                     s.grade_level,
-                    TO_CHAR(s.entrydate,'MM/DD/YYYY'),
-                    TO_CHAR(s.exitdate,'MM/DD/YYYY'),
-                    CASE s.enroll_status
-                        WHEN 0 THEN 'Active'
-                        WHEN -1 THEN 'Pre-Registered'
-                        WHEN 2 THEN 'Transferred Out'
-                        WHEN 3 THEN 'Graduated'
-                        WHEN 4 THEN 'Imported as Historical'
-                        ELSE 'Inactive'
-                        END as status,
-                    sch.name
-                FROM students s
-                INNER JOIN schools sch ON sch.school_number = s.schoolid
-                ~[if.~[gpv:student]=]
-                    WHERE TO_CHAR(s.dob,'MM/DD/YYYY') LIKE TO_CHAR((to_date('~[gpv:dob]', 'MM/DD/YYYY')),'MM/DD/YYYY')
-                [else]
-                    WHERE ( upper(s.last_name) LIKE upper('%~[gpv:student]%') )
-                [/if]
-                ORDER BY lastfirst
+                    s.home_phone,
+                    s.state_studentnumber,
+                    s.entrydate,
+                    s.exitdate,
+	    CASE s.enroll_status
+		WHEN 0  THEN 'active'
+        WHEN -1 THEN 'pre-registered'
+        WHEN 2  THEN 'transferred-out'
+        WHEN 3  THEN 'grad-or-imported'
+        WHEN 4  THEN 'grad-or-imported'
+        ELSE '#000000'
+        END as status_class,
+        CASE s.enroll_status
+        WHEN 0  THEN 'Active'
+        WHEN -1 THEN 'Pre-Registered'
+        WHEN 2  THEN 'Transferred Out'
+        WHEN 3  THEN 'Graduated'
+        WHEN 4  THEN 'Imported as Historical'
+        ELSE 'Inactive'
+        END as status,
+        sch.name
+        FROM students s
+        INNER JOIN schools sch ON sch.school_number = s.schoolid
+        WHERE
+        ~[if.~[gpv:ssn]#]
+            s.ssn LIKE '%~[gpv:ssn]%'
+        [/if]
+        ~[if.~[gpv:student]#] -- Thanks to Michael Moore for suggestion
+            ( UPPER(s.last_name) LIKE UPPER(q'{%~[gpv:student]%}') ) -- Thanks to Richard Murray for code to find students with quotes in their name
+        [/if]
+        ~[if#outerdob.~[gpv:dob]#]
+            ~[if#innerstud.~[gpv:student]#]
+                OR
+            [/if#innerstud]
+            ( TO_CHAR(s.dob,'MM/DD/YYYY') LIKE TO_CHAR((to_date('~[gpv:dob]', 'MM/DD/YYYY')),'MM/DD/YYYY') )
+        [/if#outerdob]
+        ORDER BY lastfirst
               ]
                 {
+                    "count": "~(count;-)",
                     "studentNumber": ~(student_number),
                     "studentName": "~(lastfirst)",
+                    "ssn": ~[if#ssn.~[gpv:ssn]#]"~(ssn)",[else#ssn]"",[/if#ssn]
                     "dateOfBirth": "~(dob)",
-                    "gradeLevel": ~(grade_level),
+                    "gradeLevel": "~(grade_level)",
+                    "home_phone": ~[if.pref.district_search_showPhone=1]"~(home_phone)",[else]"",[/if]
+                    "state_studentnumber": ~[if.pref.district_search_showStateID=1]"~(state_studentnumber)",[else]"",[/if]
                     "entrydate": "~(entrydate)",
                     "exitdate": "~(exitdate)",
+                    "status_class": "~(status_class)",
                     "status": "~(status)",
                     "schoolName": "~(schoolname)"
                 },
@@ -87,8 +111,11 @@
         <tr>
             <th>Student Number</th>
             <th>Student Name</th>
+            ~[if#ssn.~[gpv:ssn]#]<th>SSN</th>[/if]
             <th>DOB</th>
             <th>Grade</th>
+            ~[if.pref.district_search_showPhone=1]<th>Home Phone</th>[/if]
+            ~[if.pref.district_search_showStateID=1]<th>State Student #</th>[/if]
             <th>Entry Date</th>
             <th>Exit date</th>
             <th>Enroll Status</th>
@@ -102,11 +129,14 @@
             <tr>
                 <td><%= row.studentNumber %></td>
                 <td><%= row.studentName %></td>
+                ~[if.~[gpv:ssn]#]<td><%= row.ssn %></td>[/if]
                 <td><%= row.dateOfBirth %></td>
                 <td><%= row.gradeLevel %></td>
+                ~[if.pref.district_search_showPhone=1]<td><%= row.home_phone %></td>[/if]
+                ~[if.pref.district_search_showStateID=1]<td><%= row.state_studentnumber %></td>[/if]
                 <td><%= row.entrydate %></td>
                 <td><%= row.exitdate %></td>
-                <td><span class="<%= row.statusClass %>"><%= row.status %></span></td>
+                <td><span class="<%= row.status_class %>"><%= row.status %></span></td>
                 <td><%= row.schoolName %></td>
             </tr>
         <%
@@ -122,13 +152,7 @@
 &gt; <a href="/admin/district-search.html" target="_top">District-Wide Student Search</a><!-- breadcrumb end -->
 ~[wc:admin_navigation_css]
 
-<h1>Searching for students with ~[if.~[gpv:student]=][else]Last Name containing: ~[gpv:student][/if]
-    ~[if#student.~[gpv:student]=][else#student]
-        ~[if#dob.~[gpv:dob]=][else#dob]
-            or
-        [/if#dob]
-    [/if#student]
-    ~[if.~[gpv:dob]=][else]Birthday of ~[gpv:dob][/if]</h1>
+<h1>Searching for students with ~[if#ssn1.~[gpv:ssn]=]~[if#stu.~[gpv:student]=][else#stu]Last Name containing: ~[gpv:student] or[/if#stu] Birthday of ~[if#d.~[gpv:dob]=](none)[else#d]~[gpv:dob][/if#d][else#ssn1]SSN containing: ~[gpv:ssn][/if#ssn1]</h1>
 
 <div class="box-round"></div>
 <br>

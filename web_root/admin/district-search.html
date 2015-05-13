@@ -6,6 +6,7 @@
     <!--  v1.5 06/22/2013 Add color coding to enroll status -->
     <!--  v1.6 02/25/2014 Use page fragment so home.html does not have to be customized -->
     <!--  v1.7 08/04/2014 UI Tweaks. Released as plugin for 7.8+ -->
+    <!--  v2.0 04/2/2015 Added SSN field to search and search results. Add new display columns. -->
 
     <title>District-Wide Student Search</title>
     ~[wc:commonscripts]
@@ -14,14 +15,13 @@
 </head>
 
 <body>
-~[wc:admin_header_css]<!-- breadcrumb tag starts in header_css -->
+~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">~[text:psx.html.admin.functions.start_page]</a> &gt;&nbsp;District Search<!-- breadcrumb end -->
 ~[wc:admin_navigation_css]
 
 <!-- start of search menu -->
 <h1>District-Wide Student Search</h1>
 
-<div class="box-round" style="width:500px;">
-    <form action="district-search2.html" method="POST" id="ssForm">
+<form action="district-search2.html" method="POST" id="dsForm">
         <ul class="tabs">
             <li><a href="/admin/home.html">~[text:psx.html.admin.home.students]</a></li>
             <li><a href="/admin/faculty/search.html">~[text:psx.html.admin.home.staff]</a></li>
@@ -29,6 +29,7 @@
             <li class="selected"><a href="/admin/district-search.html">District Search</a></li>
         </ul>
         <fieldset id="districtSearch">
+		<legend>Search by Name and/or Date of Birth</legend>
             <div>
                 <label>Last Name contains:</label>
                 <input type="text" name="student" value="" id="searchParameters.lastName"/>
@@ -42,8 +43,24 @@
                 <button type="submit" id="btnSearch" class="search"><em>&nbsp;</em></button>
             </div>
         </fieldset>
-    </form>
-</div>
+
+~[if.pref.district_search_allowSSN=1]
+	<br>
+
+	<fieldset id="districtSearch">
+		<legend>Search by Social Security Number</legend>
+		<div>
+			<label>Social Security Number:</label>
+			<input type="text" name="ssn" value="" id="searchParameters.ssn"/>
+		</div>
+		<div>
+		    <label>Search</label>
+		    <button type="submit" id="ssnSearch" class="search"><em>&nbsp;</em></button>
+		</div>
+	</fieldset>
+[/if]
+</form>
+
 ~[wc:admin_footer_css]
 
 </body>

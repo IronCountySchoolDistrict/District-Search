@@ -1,0 +1,8 @@
+<!-- District-Wide Student Search Created by Jason Springel -->
+<!--  v2.0 04/2/2015 This new page fragment links to a new preference page to set several search and display preferences -->
+<script>
+    $j("[href$='district-registration.html']")
+            .parent()
+            .parent()
+            .before('<tr><td><a href="/admin/district/district_search_pref.html">District Search Plugin Settings</a></td><td>Enable or disable the ability to search for students based on their Social Security Number.</td></tr></td></tr>');
+</script>
