@@ -42,12 +42,12 @@
                     s.student_number,
                     s.lastfirst,
                     s.ssn,
-                    s.dob,
+                    TO_CHAR((to_date(s.dob)),'MM/DD/YYYY'),
                     s.grade_level,
                     s.home_phone,
                     s.state_studentnumber,
-                    s.entrydate,
-                    s.exitdate,
+                    TO_CHAR((to_date(s.entrydate)),'MM/DD/YYYY'),
+                    TO_CHAR((to_date(s.exitdate)),'MM/DD/YYYY'),
 	    CASE s.enroll_status
 		WHEN 0  THEN 'active'
         WHEN -1 THEN 'pre-registered'
@@ -152,7 +152,22 @@
 &gt; <a href="/admin/district-search.html" target="_top">District-Wide Student Search</a><!-- breadcrumb end -->
 ~[wc:admin_navigation_css]
 
-<h1>Searching for students with ~[if#ssn1.~[gpv:ssn]=]~[if#stu.~[gpv:student]=][else#stu]Last Name containing: ~[gpv:student] or[/if#stu] Birthday of ~[if#d.~[gpv:dob]=](none)[else#d]~[gpv:dob][/if#d][else#ssn1]SSN containing: ~[gpv:ssn][/if#ssn1]</h1>
+<h1>Searching for students with
+    ~[if#ssn1.~[gpv:ssn]=]
+        ~[if#stu.~[gpv:student]=]
+        [else#stu]
+            Last Name containing "~[gpv:student]"
+        [/if#stu]
+
+        ~[if#d.~[gpv:dob]=]
+        [else#d]
+            ~[if#innerif.~[gpv:student]#] or [/if#innerif]
+            Birthday of "~[gpv:dob]"
+        [/if#d]
+    [else#ssn1]
+        SSN containing: ~[gpv:ssn]
+    [/if#ssn1]
+</h1>
 
 <div class="box-round"></div>
 <br>
