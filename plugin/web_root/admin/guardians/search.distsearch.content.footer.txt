@@ -6,4 +6,4 @@
     </li>
 </script>
 
-<script src="/scripts/DistrictSearch/district-search.js"></script>
+<script src="/src/district-search/js/district-search.js"></script>
