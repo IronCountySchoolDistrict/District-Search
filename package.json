@@ -1,0 +1,19 @@
+{
+  "name": "district-search",
+  "version": "2.0.0",
+  "description": "Perform a database-wide search for any student",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IronCountySchoolDistrict/district-search.git"
+  },
+  "author": "IronCountySchoolDistrict",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/IronCountySchoolDistrict/district-search/issues"
+  },
+  "homepage": "https://github.com/IronCountySchoolDistrict/district-search#readme"
+}
