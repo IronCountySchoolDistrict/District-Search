@@ -2,7 +2,6 @@
 var dataTables = 'https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js';
 require(['underscore', dataTables], function() {
     'use strict';
-    var psData = $j.parseJSON($j('#ps-data').data().ps);
     _.each(psData.searchResults, function(elem, index, list) {
         if (elem.status === 'Active') {
             elem.statusClass = 'active';

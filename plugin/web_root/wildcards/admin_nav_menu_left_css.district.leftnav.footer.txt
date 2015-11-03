@@ -1,1 +1,1 @@
-<script src="<!-- @echo IMAGE_SERVER_URL -->/district-search/js/admin-nav-district-search.js"></script>
+<script src="/scripts/district-search/js/admin-nav-district-search.js"></script>

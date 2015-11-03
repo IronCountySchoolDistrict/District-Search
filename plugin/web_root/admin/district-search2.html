@@ -8,10 +8,10 @@
     ~[wc:commonscripts]
     <link href="/images/css/screen.css" rel="stylesheet" media="screen">
     <link href="/images/css/print.css" rel="stylesheet" media="print">
-    <link rel="stylesheet" href="<!-- @echo IMAGE_SERVER_URL -->/district-search/css/crm-css/jquery-ui.custom.css" type="text/css">
+    <link rel="stylesheet" href="/scripts/district-search/css/crm-css/jquery-ui.custom.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/demo_table_jui.css">
-    <script src="<!-- @echo IMAGE_SERVER_URL -->/district-search/js/district-search2.js"></script>
+    <script src="/scripts/district-search/js/district-search2.js"></script>
 
     <style>
         .active {
@@ -29,80 +29,74 @@
     </style>
 </head>
 
-<body>
-<!-- start ps-data -->
-<div id="ps-data"
-    data-ps='
-    {
-        "searchResults":
-        [
-            ~[tlist_sql;
-                SELECT
-                    s.student_number,
-                    s.lastfirst,
-                    s.ssn,
-                    TO_CHAR((to_date(s.dob)),'MM/DD/YYYY'),
-                    s.grade_level,
-                    s.home_phone,
-                    s.state_studentnumber,
-                    TO_CHAR((to_date(s.entrydate)),'MM/DD/YYYY'),
-                    TO_CHAR((to_date(s.exitdate)),'MM/DD/YYYY'),
-	    CASE s.enroll_status
-		WHEN 0  THEN 'active'
-        WHEN -1 THEN 'pre-registered'
-        WHEN 2  THEN 'transferred-out'
-        WHEN 3  THEN 'grad-or-imported'
-        WHEN 4  THEN 'grad-or-imported'
-        ELSE '#000000'
-        END as status_class,
-        CASE s.enroll_status
-        WHEN 0  THEN 'Active'
-        WHEN -1 THEN 'Pre-Registered'
-        WHEN 2  THEN 'Transferred Out'
-        WHEN 3  THEN 'Graduated'
-        WHEN 4  THEN 'Imported as Historical'
-        ELSE 'Inactive'
-        END as status,
-        sch.name
-        FROM students s
-        INNER JOIN schools sch ON sch.school_number = s.schoolid
-        WHERE
-        ~[if.~[gpv:ssn]#]
-            s.ssn LIKE '%~[gpv:ssn]%'
-        [/if]
-        ~[if.~[gpv:student]#] -- Thanks to Michael Moore for suggestion
-            ( UPPER(s.last_name) LIKE UPPER(q'{%~[gpv:student]%}') ) -- Thanks to Richard Murray for code to find students with quotes in their name
-        [/if]
-        ~[if#outerdob.~[gpv:dob]#]
-            ~[if#innerstud.~[gpv:student]#]
-                OR
-            [/if#innerstud]
-            ( TO_CHAR(s.dob,'MM/DD/YYYY') LIKE TO_CHAR((to_date('~[gpv:dob]', 'MM/DD/YYYY')),'MM/DD/YYYY') )
-        [/if#outerdob]
-        ORDER BY lastfirst
+<script>
+  var psData = {};
+  psData.searchResults = [
+      ~[tlist_sql;
+          SELECT
+              s.student_number,
+              s.lastfirst,
+              s.ssn,
+              TO_CHAR((to_date(s.dob)),'MM/DD/YYYY'),
+              s.grade_level,
+              s.home_phone,
+              s.state_studentnumber,
+              TO_CHAR((to_date(s.entrydate)),'MM/DD/YYYY'),
+              TO_CHAR((to_date(s.exitdate)),'MM/DD/YYYY'),
+              CASE s.enroll_status
+              WHEN 0  THEN 'active'
+                WHEN -1 THEN 'pre-registered'
+                WHEN 2  THEN 'transferred-out'
+                WHEN 3  THEN 'grad-or-imported'
+                WHEN 4  THEN 'grad-or-imported'
+                ELSE '#000000'
+                END as status_class,
+                CASE s.enroll_status
+                WHEN 0  THEN 'Active'
+                WHEN -1 THEN 'Pre-Registered'
+                WHEN 2  THEN 'Transferred Out'
+                WHEN 3  THEN 'Graduated'
+                WHEN 4  THEN 'Imported as Historical'
+                ELSE 'Inactive'
+                END as status,
+                sch.name
+                FROM students s
+                INNER JOIN schools sch ON sch.school_number = s.schoolid
+                WHERE
+                ~[if.~[gpv:ssn]#]
+                    s.ssn LIKE '%~[gpv:ssn]%'
+                [/if]
+                ~[if.~[gpv:student]#] -- Thanks to Michael Moore for suggestion
+                    ( UPPER(s.last_name) LIKE UPPER(q'{%~[gpv:student]%}') ) -- Thanks to Richard Murray for code to find students with quotes in their name
+                [/if]
+                ~[if#outerdob.~[gpv:dob]#]
+                    ~[if#innerstud.~[gpv:student]#]
+                        OR
+                    [/if#innerstud]
+                    ( TO_CHAR(s.dob,'MM/DD/YYYY') LIKE TO_CHAR((to_date('~[gpv:dob]', 'MM/DD/YYYY')),'MM/DD/YYYY') )
+                [/if#outerdob]
+                ORDER BY lastfirst
               ]
-                {
-                    "count": "~(count;-)",
-                    "studentNumber": ~(student_number),
-                    "studentName": "~(lastfirst)",
-                    "ssn": ~[if#ssn.~[gpv:ssn]#]"~(ssn)",[else#ssn]"",[/if#ssn]
-                    "dateOfBirth": "~(dob)",
-                    "gradeLevel": "~(grade_level)",
-                    "home_phone": ~[if.pref.district_search_showPhone=1]"~(home_phone)",[else]"",[/if]
-                    "state_studentnumber": ~[if.pref.district_search_showStateID=1]"~(state_studentnumber)",[else]"",[/if]
-                    "entrydate": "~(entrydate)",
-                    "exitdate": "~(exitdate)",
-                    "status_class": "~(status_class)",
-                    "status": "~(status)",
-                    "schoolName": "~(schoolname)"
-                },
-              [/tlist_sql]{}
-        ]
-    }
-    '
-    ></div>
-<!-- end ps-data>
+          {
+              "count": "~(count;-;json)",
+              "studentNumber": ~(student_number;json),
+              "studentName": "~(lastfirst;json)",
+              "ssn": ~[if#ssn.~[gpv:ssn]#]"~(ssn;json)",[else#ssn]"",[/if#ssn]
+              "dateOfBirth": "~(dob;json)",
+              "gradeLevel": "~(grade_level;json)",
+              "home_phone": ~[if.pref.district_search_showPhone=1]"~(home_phone;json)",[else]"",[/if]
+              "state_studentnumber": ~[if.pref.district_search_showStateID=1]"~(state_studentnumber;json)",[else]"",[/if]
+              "entrydate": "~(entrydate;json)",
+              "exitdate": "~(exitdate;json)",
+              "status_class": "~(status_class;json)",
+              "status": "~(status;json)",
+              "schoolName": "~(schoolname;json)"
+          },
+        [/tlist_sql]{}
+  ];
+</script>
 
+<body>
 <!-- start templates -->
 <script type="text/template" id="results-template">
     <table class="display">
