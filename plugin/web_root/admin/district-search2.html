@@ -41,6 +41,7 @@
               s.grade_level,
               s.home_phone,
               s.state_studentnumber,
+              s.dcid,
               TO_CHAR((to_date(s.entrydate)),'MM/DD/YYYY'),
               TO_CHAR((to_date(s.exitdate)),'MM/DD/YYYY'),
               CASE s.enroll_status
@@ -86,6 +87,7 @@
               "gradeLevel": "~(grade_level;json)",
               "home_phone": ~[if.pref.district_search_showPhone=1]"~(home_phone;json)",[else]"",[/if]
               "state_studentnumber": ~[if.pref.district_search_showStateID=1]"~(state_studentnumber;json)",[else]"",[/if]
+              "dcid": "~(dcid;json)",
               "entrydate": "~(entrydate;json)",
               "exitdate": "~(exitdate;json)",
               "status_class": "~(status_class;json)",
@@ -121,7 +123,7 @@
         %>
             <tr>
                 <td><%= row.studentNumber %></td>
-                <td><%= row.studentName %></td>
+                <td><a href="/admin/students/home.html?frn=001<%= row.dcid %>"><%= row.studentName %></a></td>
                 ~[if.~[gpv:ssn]#]<td><%= row.ssn %></td>[/if]
                 <td><%= row.dateOfBirth %></td>
                 <td><%= row.gradeLevel %></td>
