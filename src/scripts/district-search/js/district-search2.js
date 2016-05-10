@@ -17,8 +17,8 @@ require(['underscore', dataTables], function() {
 
     var tableTemplate = $j('#results-template').html();
     var tableSelect = $j('.box-round');
-    var renderedTableTemplate = _.template(tableTemplate, {rows: psData.searchResults});
-    tableSelect.html(renderedTableTemplate);
+    var compiledTemplate = _.template(tableTemplate);
+    tableSelect.html(compiledTemplate({rows: psData.searchResults}));
 
     $j('.box-round table').dataTable({
         "bPaginate": false,
