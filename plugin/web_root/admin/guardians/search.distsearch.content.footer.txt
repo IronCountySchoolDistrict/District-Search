@@ -1,9 +1,18 @@
 <!-- Tab insertion -->
-
 <script type="text/template" id="dist-search-template">
     <li>
         <a href="/admin/district-search.html">District Search</a>
     </li>
 </script>
 
-<script src="/scripts/district-search/js/district-search.js"></script>
+<script>
+  require.config({
+    paths: {
+      districtSearch: '/scripts/district-search/js/district-search'
+    }
+  });
+
+  require(['districtSearch'], function(districtSearch) {
+    districtSearch.default();
+  });
+</script>

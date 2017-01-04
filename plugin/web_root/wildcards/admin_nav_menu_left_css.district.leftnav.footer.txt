@@ -1,1 +1,11 @@
-<script src="/scripts/district-search/js/admin-nav-district-search.js"></script>
+<script>
+  require.config({
+    paths: {
+      adminNav: '/scripts/district-search/js/admin-nav-district-search',
+    }
+  });
+
+  require(['adminNav'], function(adminNav) {
+    adminNav.default();
+  });
+</script>

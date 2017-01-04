@@ -11,7 +11,18 @@
     <link rel="stylesheet" href="/scripts/district-search/css/crm-css/jquery-ui.custom.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/demo_table_jui.css">
-    <script src="/scripts/district-search/js/district-search2.js"></script>
+    <script>
+      require.config({
+        paths: {
+          districtSearchResults: '/scripts/district-search/js/district-search-results',
+          dataTables: 'https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min'
+        }
+      });
+
+      require(['districtSearchResults', 'dataTables'], function(districtSearchResults) {
+        districtSearchResults.default();
+      });
+    </script>
 
     <style>
         .active {
@@ -60,7 +71,15 @@
                 WHEN 4  THEN 'Imported as Historical'
                 ELSE 'Inactive'
                 END as status,
-                sch.name
+                sch.name,
+                CASE
+                  WHEN row_number()
+                       OVER (
+                         ORDER BY NULL) = count(*)
+                       OVER ()
+                    THEN ''
+                  ELSE ','
+                END
                 FROM students s
                 INNER JOIN schools sch ON sch.school_number = s.schoolid
                 WHERE
