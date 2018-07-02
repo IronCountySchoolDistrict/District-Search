@@ -13,6 +13,10 @@ export default function() {
       } else if (elem.status === 'Graduated' || elem.status === 'Imported as Historical') {
           elem.statusClass = 'grad-or-imported';
       }
+
+      elem.dateOfBirth = new Date(elem.dateOfBirth.year, elem.dateOfBirth.month - 1, elem.dateOfBirth.day).toLocaleDateString('en-US');
+      elem.entrydate = new Date(elem.entrydate.year, elem.entrydate.month - 1, elem.entrydate.day).toLocaleDateString('en-US');
+      elem.exitdate = new Date(elem.exitdate.year, elem.exitdate.month - 1, elem.exitdate.day).toLocaleDateString('en-US');
       list[index] = elem;
   });
 

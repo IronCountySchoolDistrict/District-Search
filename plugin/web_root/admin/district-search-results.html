@@ -48,13 +48,19 @@
               s.student_number,
               s.lastfirst,
               s.ssn,
-              TO_CHAR((to_date(s.dob)),'MM/DD/YYYY'),
+              extract(year from s.dob),
+              extract(month from s.dob),
+              extract(day from s.dob),
               s.grade_level,
               s.home_phone,
               s.state_studentnumber,
               s.dcid,
-              TO_CHAR((to_date(s.entrydate)),'MM/DD/YYYY'),
-              TO_CHAR((to_date(s.exitdate)),'MM/DD/YYYY'),
+              extract(year from s.entrydate),
+              extract(month from s.entrydate),
+              extract(day from s.entrydate),
+              extract(year from s.exitdate),
+              extract(month from s.exitdate),
+              extract(day from s.exitdate),
               CASE s.enroll_status
               WHEN 0  THEN 'active'
                 WHEN -1 THEN 'pre-registered'
@@ -102,13 +108,25 @@
               "studentNumber": ~(student_number;json),
               "studentName": "~(lastfirst;json)",
               "ssn": ~[if#ssn.~[gpv:ssn]#]"~(ssn;json)",[else#ssn]"",[/if#ssn]
-              "dateOfBirth": "~(dob;json)",
+              "dateOfBirth": {
+                "year": "~(dob_year;json)",
+                "month": "~(dob_month;json)",
+                "day": "~(dob_day;json)"
+              },
               "gradeLevel": "~(grade_level;json)",
               "home_phone": ~[if.pref.district_search_showPhone=1]"~(home_phone;json)",[else]"",[/if]
               "state_studentnumber": ~[if.pref.district_search_showStateID=1]"~(state_studentnumber;json)",[else]"",[/if]
               "dcid": "~(dcid;json)",
-              "entrydate": "~(entrydate;json)",
-              "exitdate": "~(exitdate;json)",
+              "entrydate": {
+                "year": "~(entrydate_year;json)",
+                "month": "~(entrydate_month;json)",
+                "day": "~(entrydate_day;json)"
+              },
+              "exitdate": {
+                "year": "~(exitdate_year;json)",
+                "month": "~(exitdate_month;json)",
+                "day": "~(exitdate_day;json)"
+              },
               "status_class": "~(status_class;json)",
               "status": "~(status;json)",
               "schoolName": "~(schoolname;json)"
