@@ -8,4 +8,8 @@
     <publisher name="Jason Springel">
         <contact email="jason.springel@pearson.com"/>
     </publisher>
+
+    <access_request>
+        <field table="students" field="dcid" access="ViewOnly" />
+    </access_request>
 </plugin>
